@@ -63,7 +63,7 @@
 
  
 ## 3.4 linux系统调用分析
- 1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
+ 1. 通过分析[lab1_ex0]( )了解Linux应用的系统调用编写和含义。(w2l1)
  
 
  ```
@@ -74,6 +74,10 @@
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  
  ```
+ lab1_ex0.s是一个输出hello world的程序，其中调用了系统调用中的标准输出函数。
+ objdump是用于查看目标文件或者可执行的目标文件的构成的GCC工具
+ nm是用来查看指定程序中的符号表相关内容的工具
+ file是用于查看文件的工具
  
  1. 通过调试[lab1_ex1](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex1.md)了解Linux应用的系统调用执行过程。(w2l1)
  
