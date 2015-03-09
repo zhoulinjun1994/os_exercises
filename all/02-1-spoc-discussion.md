@@ -36,6 +36,32 @@
   - 答案除了对上述两个要点都进行了正确阐述外，还进行了扩展和更丰富的说明（3分）
  ```
  
+ lab8 answer中syscall.c文件夹共有二十几个系统调用函数，包含了文件操作、进程控制、内存控制等多个方面的函数，有如下函数
+ [SYS_exit]              sys_exit,
+ [SYS_fork]              sys_fork,
+ [SYS_wait]              sys_wait,
+ [SYS_exec]              sys_exec,
+ [SYS_yield]             sys_yield,
+ [SYS_kill]              sys_kill,
+ [SYS_getpid]            sys_getpid,
+ [SYS_putc]              sys_putc,
+ [SYS_pgdir]             sys_pgdir,
+ [SYS_gettime]           sys_gettime,
+ [SYS_lab6_set_priority] sys_lab6_set_priority,
+ [SYS_sleep]             sys_sleep,
+ [SYS_open]              sys_open,
+ [SYS_close]             sys_close,
+ [SYS_read]              sys_read,
+ [SYS_write]             sys_write,
+ [SYS_seek]              sys_seek,
+ [SYS_fstat]             sys_fstat,
+ [SYS_fsync]             sys_fsync,
+ [SYS_getcwd]            sys_getcwd,
+ [SYS_getdirentry]       sys_getdirentry,
+ [SYS_dup]               sys_dup,
+ 这里包含了一些创建，运行，中止进程，打开，关闭，读写，查找文件等函数。
+
+ 
 ## 3.4 linux系统调用分析
  1. 通过分析[lab1_ex0](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab1/lab1-ex0.md)了解Linux应用的系统调用编写和含义。(w2l1)
  
