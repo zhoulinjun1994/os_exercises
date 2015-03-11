@@ -54,6 +54,36 @@ lab1中的cprintf函数最终通过哪些外设完成了对字符串的输出？
 
 lab1中printfmt函数用到了可变参，请参考写一个小的linux应用程序，完成实现定义和调用一个可变参数的函数。(spoc)
 - [x]  
+- #include <stdio.h>
+#include <string.h>  
+#include <stdarg.h>
+
+int func(char *msg, ... )  
+{  
+	va_list argp;
+	int argno = 0;
+	char *para; 
+	
+	va_start( argp, msg );  
+	
+	while (1) 
+	{  
+		para = va_arg( argp, char *);
+		if ( strcmp( para, "\0") == 0 )  
+			break;  
+		printf("Parameter #%d is: %s\n", argno, para);  
+		argno++;  
+	}  
+	va_end( argp ); 
+	return 0;  
+}
+
+
+int main() 
+{  
+	func("DEMO", "This", "is", "a", "demo!" ,"333333", "\0");  
+	return 0;
+}  
 
 
 
