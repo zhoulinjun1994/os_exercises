@@ -36,6 +36,7 @@ time ./goodlocality
 可以看到其执行时间。
 
 >
+```
 第一个程序的时间：
 10485760 count computing over!
 real 0m0.037s
@@ -46,6 +47,7 @@ sys 0m0.003s
 real 0m0.156s
 user 0m0.149s
 sys 0m0.004s
+```
 
 ## 小组思考题目
 ----
@@ -129,6 +131,121 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
   disk 16: 00 0a 15 1a 03 00 09 13 1c 0a 18 03 13 07 17 1c 
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
+```
+
+>
+
+答案：
+
+```
+Virtual Address 6653:
+  --> pde index:0x19  pde contents: (valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address 1c13:
+  --> pde index:0x7  pde contents: (valid 1, pfn 0x3d)
+    --> pte index:0x0 pte contents: (valid 1, pfn 0x76)
+      --> To Physical Adress 0xed3 --> Value: 18
+
+Virtual Address 6890:
+  --> pde index:0x1a  pde contents: (valid 0, pfn 0x7f)
+    --> Fault (page directory entry not valid)
+
+Virtual Address af6:
+  --> pde index:0x2  pde contents: (valid 1, pfn 0x21)
+    --> pte index:0x17 pte contents: (valid 0, pfn 0x7f)
+      --> Fault (page table entry not vaild)
+
+Virtual Address 1e6f:
+  --> pde index:0x7  pde contents: (valid 1, pfn 0x3d)
+    --> pte index:0x13 pte contents: (valid 0, pfn 0x16)
+      --> To Disk Sector Address 0x2cf --> Value 28
+```
+
+代码：
+```
+#include<stdio.h>
+
+unsigned int memory[128][32];
+unsigned int disk[128][32];
+
+void convert(unsigned int virAdd){
+    printf("Virtual Address %x:\n",virAdd);
+
+    unsigned int mask1 = 0x7c00;//0111 1100 0000 0000
+    unsigned int pdeIndex = (virAdd & mask1) >> 10;
+    printf("  --> pde index:0x%x",pdeIndex);
+    unsigned int GDBR = 0x0d80;
+    unsigned int temp = memory[GDBR >> 5][pdeIndex];
+    unsigned int valid = temp >> 7;
+    unsigned int pfn = temp&0x7f;
+    printf("  pde contents: (valid %d, pfn 0x%x)\n",valid,pfn);
+
+    if (valid == 0) {
+        printf("    --> Fault (page directory entry not valid)\n\n");
+        return;
+    }
+
+    unsigned int mask2 = 0x03e0;//0000 0011 1110 0000
+    unsigned int pteIndex = (virAdd & mask2) >> 5;
+    printf("    --> pte index:0x%x",pteIndex);
+    temp = memory[pfn][pteIndex];
+    valid = temp >> 7;
+    pfn = temp&0x7f;
+    printf(" pte contents: (valid %d, pfn 0x%x)\n",valid,pfn);
+
+    if (valid == 0){
+        if (pfn == 0x7f){
+            printf("      --> Fault (page table entry not vaild)\n\n");
+        }
+        else
+        {
+            unsigned int mask3 = 0x1f;
+            unsigned int offset = virAdd & mask3;
+            printf("      --> To Disk Sector Address 0x%x --> Value %d\n\n",(pfn << 5)+offset,disk[pfn][offset]);
+        }
+        return;
+    }
+
+    unsigned int mask3 = 0x1f;
+    unsigned int offset = virAdd & mask3;
+    printf("      --> To Physical Adress 0x%x --> Value: %d\n\n",(pfn<<5)+offset,memory[pfn][offset]);
+}
+
+
+int main(){
+    freopen("in.txt","r",stdin);
+    char temp[200];
+    for (int i=0;i<128;i++){
+        scanf("%s",temp);
+        scanf("%s",temp);
+        for (int j=0;j<32;j++){
+            scanf("%x",&memory[i][j]);
+            //printf("%x ",memory[i][j]);
+        }
+        //printf("\n");
+    }
+
+    scanf("%s",temp);
+
+    for (int i=0;i<128;i++){
+        scanf("%s",temp);
+        scanf("%s",temp);
+        for (int j=0;j<32;j++){
+            scanf("%x",&disk[i][j]);
+            //printf("%x ",disk[i][j]);
+        }
+        //printf("\n");
+    }
+
+    while (1){
+        unsigned int virAdd;
+        scanf("%x",&virAdd);
+        if (virAdd > 0xffff) break;
+        convert(virAdd);
+    }
+
+}
 ```
 
 ## 扩展思考题
