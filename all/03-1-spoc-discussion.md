@@ -40,8 +40,201 @@ NOTICE
 伙伴分配器的一个极简实现
 http://coolshell.cn/tag/buddy
 ```
-
+>
+2012011350 周琳钧 实现最先匹配，即优先匹配第一个能够容纳待分配空间的空间。用Python来实现。测试用例为申请100字节，申请200字节，申请300字节，释放200字节，申请500字节，释放100字节，释放300字节，申请400字节。
 --- 
+```
+class listnode:
+    first = None
+    def __init__(self,l,r,n):
+        self.left = l
+        self.right = r
+        self.nextNode = None
+        self.precNode = None
+        self.name = n
+        self.status = "available"
+
+    def malloc(self,size,name):
+        if (self.right-self.left+1 >= size):
+            if self.right-self.left+1 > size:
+                newNode = listnode(self.left+size,self.right,self.name)
+                if self == listnode.first:
+                    listnode.first = newNode
+
+                if (self.precNode != None):
+                    self.precNode.nextNode = newNode
+                if (self.nextNode != None):
+                    self.nextNode.precNode = newNode
+
+                newNode.nextNode = self.nextNode
+                newNode.precNode = self.precNode
+
+                self.right = self.left+size-1
+                self.status = "in use"
+                self.name = name
+                return self
+            else:
+                if self == listnode.first:
+                    listnode.first = None
+
+                if (self.precNode != None):
+                    self.precNode.nextNode = self.nextNode
+                if (self.nextNode != None):
+                    self.nextNode.precNode = self.precNode
+
+                self.status = "in use"
+                self.name = name
+                return self
+
+        else:
+            if self.nextNode == None:
+                return None
+            else:
+                return self.nextNode.malloc(size,name)
+
+    def release(self):
+        temp = listnode.first
+        self.name = "free"
+        self.status = "available"
+        if temp == None:
+            listnode.first = self
+            return
+
+        if temp.left > self.right:
+            self.nextNode = temp
+            self.precNode = None
+            temp.precNode = self
+            listnode.first = self
+        else:
+            while temp.nextNode != None and temp.nextNode.right<self.left:
+                temp = temp.nextNode
+
+            self.nextNode = temp.nextNode
+            self.precNode = temp
+            temp.nextNode = self
+
+        if self.precNode!=None and self.precNode.right+1==self.left:
+            self.left = self.precNode.left
+
+            self.precNode = self.precNode.precNode
+            if (self.precNode!=None):
+                self.precNode.nextNode = self
+            else:
+                listnode.first = self
+
+        if self.nextNode !=None and self.nextNode.left==self.right+1:
+            self.right = self.nextNode.right
+
+            self.nextNode = self.nextNode.nextNode
+            if (self.nextNode != None):
+                self.nextNode.precNode = self
+
+    def printSelf(self):
+        print "Name : %s\nFrom %d to %d\nStatus: %s\n" % (self.name,self.left,self.right,self.status)
+
+    def printAll(self):
+        print "BELOW IS THE FREE SPACE\n"
+        temp = self
+        while temp!=None:
+            temp.printSelf()
+            temp = temp.nextNode
+        print "END\n"
+
+
+
+
+print "Hello, This is a program for memory allocation algorithm demonstration"
+listnode.first = listnode(0,1000000,"free")
+
+m1 = listnode.first.malloc(100,'m1')
+m2 = listnode.first.malloc(200,'m2')
+m3 = listnode.first.malloc(300,'m3')
+listnode.first.printAll()
+m2.release()
+listnode.first.printAll()
+m4 = listnode.first.malloc(500, 'm4')
+listnode.first.printAll()
+m3.release()
+listnode.first.printAll()
+m1.release()
+listnode.first.printAll()
+m5 = listnode.first.malloc(400, 'm5')
+listnode.first.printAll()
+
+```
+结果：
+```
+Hello, This is a program for memory allocation alg
+BELOW IS THE FREE SPACE
+
+Name : free
+From 600 to 1000000
+Status: available
+
+END
+
+BELOW IS THE FREE SPACE
+
+Name : free
+From 100 to 299
+Status: available
+
+Name : free
+From 600 to 1000000
+Status: available
+
+END
+
+BELOW IS THE FREE SPACE
+
+Name : free
+From 100 to 299
+Status: available
+
+Name : free
+From 1100 to 1000000
+Status: available
+
+END
+
+BELOW IS THE FREE SPACE
+
+Name : free
+From 100 to 599
+Status: available
+
+Name : free
+From 1100 to 1000000
+Status: available
+
+END
+
+BELOW IS THE FREE SPACE
+
+Name : free
+From 0 to 599
+Status: available
+
+Name : free
+From 1100 to 1000000
+Status: available
+
+END
+
+BELOW IS THE FREE SPACE
+
+Name : free
+From 400 to 599
+Status: available
+
+Name : free
+From 1100 to 1000000
+Status: available
+
+END
+
+
+```
 
 ## 扩展思考题
 
