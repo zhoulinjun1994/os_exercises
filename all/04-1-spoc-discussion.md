@@ -35,6 +35,18 @@ time ./goodlocality
 ```
 可以看到其执行时间。
 
+>
+第一个程序的时间：
+10485760 count computing over!
+real 0m0.037s
+user 0m0.031s
+sys 0m0.003s
+将i和j调换后：
+10485760 count computing over!
+real 0m0.156s
+user 0m0.149s
+sys 0m0.004s
+
 ## 小组思考题目
 ----
 
