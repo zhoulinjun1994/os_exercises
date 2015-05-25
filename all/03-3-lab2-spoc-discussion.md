@@ -31,6 +31,7 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
 - [x]  
 
 >  
+建立段机制和GDT表初始化，建立页表项和二级页表，最后设置CR0寄存器的第31位。
 
 ---
 
@@ -57,6 +58,32 @@ x86保护模式中权限管理无处不在，下面哪些时候要检查访问�
 - [x]  
 
 > 
+```
+学号：2012011350 取模后值为5
+ 加入asm volatile ("int $x");这句话时，会产生如下的信息：
+ trapframe at 0x7b5c
+ edi  0x00000001
+ esi  0x00000000
+ ebp  0x00007bc8
+ oesp 0x00007b7c
+ ebx  0x00010094
+ edx  0x000000a1
+ ecx  0x00000000
+ eax  0x000000ff
+ ds   0x----0010
+ es   0x----0010
+ fs   0x----0023
+ gs   0x----0023
+ trap 0x00000005 (unknown trap)
+ err  0x00000000
+ eip  0x00100070
+ cs   0x----0008
+ flag 0x00000207 CF,PF,IF,IOPL=0
+kernel panic at kern/trap/trap.c:209:
+    unexpected trap in kernel.
+trap信息输出为5，恰好就是中断号
+在系统中这个中断号对应的是声卡~~~
+```
 
 （3）对于lab2的输出信息，请说明数字的含义
 ```
@@ -111,6 +138,47 @@ va 0xcd82c07c, pa 0x0c20907c, pde_idx 0x00000336, pde_ctx  0x00037003, pte_idx 0
 - [x]  
 
 > 
+
+程序（Python）：
+```
+def cvt(va, pa):
+    pde_idx = (va & 0xffc00000) >> 22
+    pde_ctx = ((pde_idx - 0x300 + 0x1) << 12) | 0x3
+    pte_idx = (va & 0x003ff000) >> 12
+    pte_ctx = (pa & 0xfffff000) | 0x3
+
+    print 'va:%s pa:%s, pde_idx:%s, pde_ctx:%s, pte_idx:%s, pte_ctx:%s' \
+    %(hex(va), hex(pa), hex(pde_idx), hex(pde_ctx), hex(pte_idx), hex(pte_ctx))
+
+list_va = [0xc2265b1f, 0xcc386bbc, 0xc7ed4d57, 0xca6cecc0, 0xc18072e8, 0xcd5f4b3a, 0xcc324c99, 0xc7204e52, 0xc3a90293, 0xce6c3f32]
+list_pa = [0x0d8f1b1f, 0x0414cbbc, 0x07311d57, 0x0c9e9cc0, 0x007412e8, 0x06ec9b3a, 0x0008ac99, 0x0b8b6e52, 0x0f1fd293, 0x007d4f32]
+
+for i in range(10):
+    cvt(list_va[i], list_pa[i])
+```
+结果：
+```
+va:0xc2265b1fL pa:0xd8f1b1f, pde_idx:0x308L, pde_ctx:0x9003L, pte_idx:0x265L, pt
+e_ctx:0xd8f1003L
+va:0xcc386bbcL pa:0x414cbbc, pde_idx:0x330L, pde_ctx:0x31003L, pte_idx:0x386L, p
+te_ctx:0x414c003L
+va:0xc7ed4d57L pa:0x7311d57, pde_idx:0x31fL, pde_ctx:0x20003L, pte_idx:0x2d4L, p
+te_ctx:0x7311003L
+va:0xca6cecc0L pa:0xc9e9cc0, pde_idx:0x329L, pde_ctx:0x2a003L, pte_idx:0x2ceL, p
+te_ctx:0xc9e9003L
+va:0xc18072e8L pa:0x7412e8, pde_idx:0x306L, pde_ctx:0x7003L, pte_idx:0x7L, pte_c
+tx:0x741003L
+va:0xcd5f4b3aL pa:0x6ec9b3a, pde_idx:0x335L, pde_ctx:0x36003L, pte_idx:0x1f4L, p
+te_ctx:0x6ec9003L
+va:0xcc324c99L pa:0x8ac99, pde_idx:0x330L, pde_ctx:0x31003L, pte_idx:0x324L, pte
+_ctx:0x8a003L
+va:0xc7204e52L pa:0xb8b6e52, pde_idx:0x31cL, pde_ctx:0x1d003L, pte_idx:0x204L, p
+te_ctx:0xb8b6003L
+va:0xc3a90293L pa:0xf1fd293, pde_idx:0x30eL, pde_ctx:0xf003L, pte_idx:0x290L, pt
+e_ctx:0xf1fd003L
+va:0xce6c3f32L pa:0x7d4f32, pde_idx:0x339L, pde_ctx:0x3a003L, pte_idx:0x2c3L, pt
+e_ctx:0x7d4003L
+```
 
 ---
 
