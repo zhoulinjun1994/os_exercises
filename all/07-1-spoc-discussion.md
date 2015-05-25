@@ -153,7 +153,7 @@ dx          Thread 0                Thread 1
 1   1005 jgt .top
 1   1006 halt
 
-./x86.py -p looping-race-nolock.s -t 2 -a bx=3 -M 2000 ：
+./x86.py -p looping-race-nolock.s -t 2 -a bx=3 -M 2000 ，循环3次的目的是便于和之前作对比：
 
 2000          Thread 0                Thread 1
 0
@@ -310,7 +310,7 @@ dx          Thread 0                Thread 1
 1   ------ Interrupt ------  ------ Interrupt ------
 1                            1006 halt
 
-结论：进程切换的时候通用寄存器是要恢复为上一次的值，内存则不用。
+结论：进程切换的时候通用寄存器是要恢复为上一次的值，内存则不用，因此，如果值是保存在寄存器中，进程切换不会影响其值，但如果值保存在内存中，则会基于上次进程执行完毕后的数值继续运行。
 ```
 
 3. （spoc） 了解software-based lock, hardware-based lock, [software-hardware-lock代码目录](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/software-hardware-locks)
