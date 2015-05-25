@@ -50,6 +50,7 @@
 
 >
 
+```
 以读取文件为例，依次调用：
 read()
 sys_read()
@@ -63,6 +64,7 @@ sfs_rbuf()
 sfs_rwblock_nolock()
 dop_io()
 disk0_io()
+```
 
 2. （spoc） 在下面的实验代码的基础上，实现基于文件系统的pipe IPC机制
 
