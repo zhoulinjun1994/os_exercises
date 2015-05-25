@@ -39,5 +39,49 @@
 
 ## 小组思考题
  - (spoc)完成磁盘访问与磁盘寻道算法的作业，具体帮助和要求信息请看[disksim指导信息](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.md)和[disksim参考代码](https://github.com/chyyuu/ucore_lab/blob/master/related_info/lab8/disksim-homework.py)
+ 
+>
 
+```
+问题1:  
+
+(1)-a 0 : seek=0; rotate=165; transfer=30; total=165; 
+
+(2)-a 6 : seek=0; rotate=345; transfer=30; total=375; 
+
+(3)-a 30 : seek=80; rotate=265; transfer=30; total=375; 
+
+(4)-a 7,30,8:  
+block 7 : seek=0,; rotate=15; transfer=30; total=45;  
+block 30 : seek=80; rotate=220; transfer=30; total=330;
+block 8 : seek=80; ratate=310; transfer=30; total=420;
+
+(5)-a 10,11,12,13，24,1 :  
+block 10 : seek=0  rotate=105  transfer=30  total=135;   
+block 11 : seek=0  rotate=0  transfer=30  total=30;   
+block 12 : seek=40  rotate=320  transfer=30  total=390;  
+block 13 : seek=0  rotate=0  transfer=30  total=30;  
+block 24 : seek=40  rotate=260  transfer=30  total=330;  
+block  1 : seek=80  rotate=280  transfer=30  total=390; 
+
+问题2:  
+
+-a 10,11,12,13，24,1 :  
+block=10 : seek=0  rotate=105  transfer=30  total=135;  
+block=11 : seek=0  rotate=0  transfer=30  total=30;  
+block=1 : seek=0  rotate=30  transfer=30  total=60;  
+block=12 : seek=40  rotate=260  transfer=30  total=330;  
+block=13 : seek=0  rotate=0  transfer=30  total=30;  
+block=24 : seek=40  rotate=260  transfer=30  total=330;  
+
+问题3:  
+
+-a 10,11,12,13，24,1 :  
+block=10 : seek=0  rotate=105  transfer=30  total=135;  
+block=11 : seek=0  rotate=0  transfer=30  total=30;  
+block=1 : seek=0  rotate=30  transfer=30  total=60;  
+block=12 : seek=40  rotate=300  transfer=30  total=370;  
+block=13 : seek=0  rotate=0  transfer=30  total=30;   
+block=24 : seek=40  rotate=300 transfer=30  total=370;
+```
 
